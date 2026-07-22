@@ -31,13 +31,16 @@ class PassPhraseGenerator
   end
 
   def roll : String
-    return @wordlist[Random.rand(@list_size)]
+    return @wordlist[Random::Secure.rand(@list_size)]
   end
 
-  def new_phrase(len : Int32, capitalize : Bool) : String
+  def new_phrase(len : Int32, capitalize : Bool, separator : String) : String
     phrase = ""
     len.times do
       word = roll
+      if phrase.size != 0
+	phrase = phrase + separator
+      end
       if capitalize
 	phrase = phrase + word.capitalize
       else
@@ -48,11 +51,12 @@ class PassPhraseGenerator
   end
 end
     
-nwords = 5
+nwords = 6
 beale = false
 capitalize = true
 nphrases = 1
 wordlist = "eff.wordlist"
+separator = ""
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using diceware"
@@ -65,6 +69,7 @@ OptionParser.parse do |parser|
   parser.on("-d", "--diceware", "Use the Diceware word list") { wordlist = "diceware.wordlist" }
   parser.on("-s", "--short", "Use the EFF short word list") { wordlist = "eff_short.wordlist" }
   parser.on("-a", "--alternate", "Use the alternate EFF short word list") { wordlist = "eff_short2.wordlist" }
+  parser.on("-x", "--spaces", "Separate words with spaces") { separator = " " }
   parser.on("-h", "--help", "Show this help") do
     puts parser
     exit
@@ -87,8 +92,8 @@ end
 
 g = PassPhraseGenerator.new(wordlist)
 total_entropy = g.entropy * nwords.to_f
-printf "Passphrase%s with %.1f bits of entropy:\n",
-       nphrases == 1 ? "" : "s", total_entropy
+printf "%d-word passphrase%s with %.1f bits of entropy using %s:\n",
+       nwords, nphrases == 1 ? "" : "s", total_entropy, wordlist
 nphrases.times do
-  puts g.new_phrase(nwords, capitalize)
+  puts g.new_phrase(nwords, capitalize, separator)
 end
