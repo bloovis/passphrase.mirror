@@ -30,20 +30,18 @@ class PassPhraseGenerator
     #puts "wordlist size #{@list_size}, entropy = #{@entropy}"
   end
 
-  def roll : Int32
-    return Random.rand(@list_size)
+  def roll : String
+    return @wordlist[Random.rand(@list_size)]
   end
 
   def new_phrase(len : Int32, capitalize : Bool) : String
     phrase = ""
     len.times do
-      i = roll
-      #puts "rolled #{i}"
-      word = @wordlist[i]
+      word = roll
       if capitalize
-	phrase = phrase + @wordlist[i].capitalize
+	phrase = phrase + word.capitalize
       else
-	phrase = phrase + @wordlist[i]
+	phrase = phrase + word
       end
     end
     return phrase
@@ -57,12 +55,12 @@ nphrases = 1
 wordlist = "eff.wordlist"
 
 OptionParser.parse do |parser|
-  parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using the EFF wordlist"
+  parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using diceware"
   parser.on("-w SIZE", "--words=SIZE",
 	    "Specifies the number of words for the passphrase") { |size| nwords = size.to_i }
   parser.on("-n NUMBER", "--phrases=NUMBER",
 	    "Specifies the number of passphrases to generate") { |number| nphrases = number.to_i }
-  parser.on("-c", "--nocaps", "Don't capitalize words") { capitalize = false }
+  parser.on("-l", "--lowercase", "Don't capitalize words") { capitalize = false }
   parser.on("-b", "--beale", "Use the Beale word list") { wordlist = "beale.wordlist" }
   parser.on("-d", "--diceware", "Use the Diceware word list") { wordlist = "diceware.wordlist" }
   parser.on("-s", "--short", "Use the EFF short word list") { wordlist = "eff_short.wordlist" }
@@ -81,6 +79,10 @@ OptionParser.parse do |parser|
     STDERR.puts parser
     exit(1)
   end
+end
+
+if ARGV.size > 0
+  puts "Ignoring superfluous args #{ARGV.join(' ')}"
 end
 
 g = PassPhraseGenerator.new(wordlist)
