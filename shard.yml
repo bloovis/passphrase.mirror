@@ -1,0 +1,13 @@
+name: passphrase
+version: 0.1.0
+
+authors:
+  - Mark Alexander <marka@pobox.com>
+
+targets:
+  passphrase:
+    main: src/passphrase.cr
+
+crystal: '>= 1.20.2'
+
+license: MIT
