@@ -2,11 +2,15 @@
 
 This program generates a passphrase using the Diceware algorithm.
 
-Three word lists are available:
+Several word lists are available:
 
 * EFF long word list (default)
 * Original Diceware word list
 * Beale word list
+* EFF first short list
+* EFF second short list
+
+The source for these word lists is [here](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
 
 ## Installation
 
@@ -30,14 +34,6 @@ Run this command for usage information:
 ```
 passphrase --help
 ```
-
-## Contributing
-
-1. Fork it (<https://github.com/your-github-user/passphrase/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
 
 ## Contributors
 

@@ -14,6 +14,8 @@ require "option_parser"
 
 class PassPhraseGenerator
   @wordlist : Array(String)
+  @list_size = 0
+  property entropy = 0.0
 
   def initialize(filename)
     @wordlist = [] of String
@@ -23,15 +25,13 @@ class PassPhraseGenerator
       #puts "Word #{line}"
       @wordlist << line.split[1]
     end
-    #puts "wordlist size #{@wordlist.size}"
+    @list_size = @wordlist.size
+    @entropy = Math.log2(@list_size.to_f)
+    #puts "wordlist size #{@list_size}, entropy = #{@entropy}"
   end
 
   def roll : Int32
-    n = 0
-    5.times do
-      n = (n * 6) + Random.rand(6)
-    end
-    return n
+    return Random.rand(@list_size)
   end
 
   def new_phrase(len : Int32, capitalize : Bool) : String
@@ -58,13 +58,15 @@ wordlist = "eff.wordlist"
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using the EFF wordlist"
-  parser.on("-s SIZE", "--size=SIZE",
+  parser.on("-w SIZE", "--words=SIZE",
 	    "Specifies the number of words for the passphrase") { |size| nwords = size.to_i }
   parser.on("-n NUMBER", "--phrases=NUMBER",
 	    "Specifies the number of passphrases to generate") { |number| nphrases = number.to_i }
   parser.on("-c", "--nocaps", "Don't capitalize words") { capitalize = false }
   parser.on("-b", "--beale", "Use the Beale word list") { wordlist = "beale.wordlist" }
   parser.on("-d", "--diceware", "Use the Diceware word list") { wordlist = "diceware.wordlist" }
+  parser.on("-s", "--short", "Use the EFF short word list") { wordlist = "eff_short.wordlist" }
+  parser.on("-a", "--alternate", "Use the alternate EFF short word list") { wordlist = "eff_short2.wordlist" }
   parser.on("-h", "--help", "Show this help") do
     puts parser
     exit
@@ -82,6 +84,9 @@ OptionParser.parse do |parser|
 end
 
 g = PassPhraseGenerator.new(wordlist)
+total_entropy = g.entropy * nwords.to_f
+printf "Passphrase%s with %.1f bits of entropy:\n",
+       nphrases == 1 ? "" : "s", total_entropy
 nphrases.times do
   puts g.new_phrase(nwords, capitalize)
 end
