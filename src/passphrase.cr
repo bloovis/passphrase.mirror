@@ -57,6 +57,7 @@ capitalize = true
 nphrases = 1
 wordlist = "eff.wordlist"
 separator = ""
+verbose = false
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using diceware"
@@ -70,6 +71,7 @@ OptionParser.parse do |parser|
   parser.on("-s", "--short", "Use the EFF short word list") { wordlist = "eff_short.wordlist" }
   parser.on("-a", "--alternate", "Use the alternate EFF short word list") { wordlist = "eff_short2.wordlist" }
   parser.on("-x", "--spaces", "Separate words with spaces") { separator = " " }
+  parser.on("-v", "--verbose", "Print extra information") { verbose = true }
   parser.on("-h", "--help", "Show this help") do
     puts parser
     exit
@@ -92,8 +94,10 @@ end
 
 g = PassPhraseGenerator.new(wordlist)
 total_entropy = g.entropy * nwords.to_f
-printf "%d-word passphrase%s with %.1f bits of entropy using %s:\n",
-       nwords, nphrases == 1 ? "" : "s", total_entropy, wordlist
+if verbose
+  printf "%d-word passphrase%s with %.1f bits of entropy using %s:\n",
+	 nwords, nphrases == 1 ? "" : "s", total_entropy, wordlist
+end
 nphrases.times do
   puts g.new_phrase(nwords, capitalize, separator)
 end

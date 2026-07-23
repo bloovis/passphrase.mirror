@@ -29,10 +29,26 @@ make install
 
 ## Usage
 
-Run this command for usage information:
+With no arguments, `passphrase` prints a 6-word passphrase using
+the EFF long word list.
+
+For additional usage information, use this command:
 
 ```
 passphrase --help
+```
+
+To send a passphrase to the clipboard without displaying
+it, use this command on Wayland:
+
+```
+passphrase | wl-copy
+```
+
+or use this command on X11:
+
+```
+passphrase | xclip
 ```
 
 ## Contributors
