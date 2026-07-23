@@ -30,24 +30,14 @@ class PassPhraseGenerator
     #puts "wordlist size #{@list_size}, entropy = #{@entropy}"
   end
 
-  def roll : String
+  def random_word : String
     return @wordlist[Random::Secure.rand(@list_size)]
   end
 
-  def new_phrase(len : Int32, capitalize : Bool, separator : String) : String
-    phrase = ""
-    len.times do
-      word = roll
-      if phrase.size != 0
-	phrase = phrase + separator
-      end
-      if capitalize
-	phrase = phrase + word.capitalize
-      else
-	phrase = phrase + word
-      end
-    end
-    return phrase
+  def random_phrase(len : Int32, caps : Bool, separator : String) : String
+    words = [] of String
+    len.times { words << random_word }
+    return words.map { |w| caps ? w.capitalize : w } .join(separator)
   end
 end
     
@@ -100,5 +90,5 @@ if verbose
 end
 
 nphrases.times do
-  puts g.new_phrase(nwords, capitalize, separator)
+  puts g.random_phrase(nwords, capitalize, separator)
 end
