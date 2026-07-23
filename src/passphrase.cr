@@ -52,7 +52,6 @@ class PassPhraseGenerator
 end
     
 nwords = 6
-beale = false
 capitalize = true
 nphrases = 1
 wordlist = "eff.wordlist"
@@ -93,11 +92,13 @@ if ARGV.size > 0
 end
 
 g = PassPhraseGenerator.new(wordlist)
-total_entropy = g.entropy * nwords.to_f
+
 if verbose
-  printf "%d-word passphrase%s with %.1f bits of entropy using %s:\n",
+  total_entropy = g.entropy * nwords.to_f
+  printf "Generating %d-word passphrase%s with %.1f bits of entropy using %s:\n",
 	 nwords, nphrases == 1 ? "" : "s", total_entropy, wordlist
 end
+
 nphrases.times do
   puts g.new_phrase(nwords, capitalize, separator)
 end
