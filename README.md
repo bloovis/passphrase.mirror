@@ -1,6 +1,6 @@
 # passphrase
 
-This program generates a passphrase using the Diceware algorithm.
+This Crystal program generates a passphrase using the Diceware algorithm.
 
 Several word lists are available:
 
@@ -36,6 +36,23 @@ For additional usage information, use this command:
 
 ```
 passphrase --help
+```
+
+Here is the output of that command:
+
+```
+Usage: passphrase [args]
+Generates a passphrase using diceware
+    -w SIZE, --words=SIZE            Specifies the number of words for the passphrase
+    -n NUMBER, --phrases=NUMBER      Specifies the number of passphrases to generate
+    -l, --lowercase                  Don't capitalize words
+    -b, --beale                      Use the Beale word list
+    -d, --diceware                   Use the Diceware word list
+    -s, --short                      Use the EFF short word list
+    -a, --alternate                  Use the alternate EFF short word list
+    -x, --spaces                     Separate words with spaces
+    -v, --verbose                    Print extra information
+    -h, --help                       Show this help
 ```
 
 To send a passphrase to the clipboard without displaying
