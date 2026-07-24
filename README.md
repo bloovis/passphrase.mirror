@@ -1,6 +1,7 @@
 # passphrase
 
-This Crystal program generates a passphrase using the Diceware algorithm.
+This repo contains Crystal and Ruby programs that generate a
+passphrase using the Diceware algorithm.
 
 Several word lists are available:
 
@@ -12,9 +13,9 @@ Several word lists are available:
 
 The source for these word lists is [here](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
 
-## Installation
+## Crystal Installation
 
-Run this command to build passphrase:
+Run this command to build the Crystal version of `passphrase`:
 
 ```
 make
@@ -25,6 +26,15 @@ in `/usr/local/share/passphrase`:
 
 ```
 make install
+```
+
+## Ruby Installation
+
+If you do not have a Crystal compiler, you can use the Ruby version
+of `passphrase`.  To install it and the word lists, use this command:
+
+```
+make install-ruby
 ```
 
 ## Usage

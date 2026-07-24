@@ -1,29 +1,32 @@
+#!/usr/bin/env ruby
+
 # Generates a passphrase using the Diceware algorithm.
-# Three wordlists are available:
+# Five wordlists are available:
 # - EFF long word list (default)
 # - EFF short list #1
 # - EFF short list #2
 # - Original Diceware word list
 # - Beale word list
 #
-# Build the program using:
-#   crystal build passphrase.cr
+# Copy the program:
+#   sudo cp src/passphrase.rb /usr/local/bin/passphrase
 # Copy the word lists:
 #   sudo mkdir -p /usr/local/share/passphrase
 #   sudo cp wordlists/*.wordlist /usr/local/share/passphrase
 
-require "option_parser"
+require "optparse"
+require "securerandom"
 
 class PassPhraseGenerator
-  @wordlist : Array(String)
+  @wordlist = []
   @list_size = 0
-  property entropy = 0.0
+  attr_accessor :entropy
 
   def initialize(filename)
-    @wordlist = [] of String
-    fullpath = Path.new("/usr/local/share/passphrase", filename)
+    @wordlist = []
+    fullpath = File.join("/usr/local/share/passphrase", filename)
     #puts "Reading #{fullpath}"
-    File.each_line(fullpath) do |line|
+    IO.foreach(fullpath) do |line|
       #puts "Word #{line}"
       @wordlist << line.split[1]
     end
@@ -32,12 +35,12 @@ class PassPhraseGenerator
     #puts "wordlist size #{@list_size}, entropy = #{@entropy}"
   end
 
-  def random_word : String
-    return @wordlist[Random::Secure.rand(@list_size)]
+  def random_word
+    return @wordlist[SecureRandom.random_number(@list_size)]
   end
 
-  def random_phrase(len : Int32, caps : Bool, separator : String) : String
-    words = [] of String
+  def random_phrase(len, caps, separator)
+    words = []
     len.times { words << random_word }
     return words.map { |w| caps ? w.capitalize : w } .join(separator)
   end
@@ -50,7 +53,7 @@ wordlist = "eff.wordlist"
 separator = ""
 verbose = false
 
-OptionParser.parse do |parser|
+OptionParser.new do |parser|
   parser.banner = "Usage: passphrase [args]\nGenerates a passphrase using diceware"
   parser.on("-w SIZE", "--words=SIZE",
 	    "Specifies the number of words for the passphrase") { |size| nwords = size.to_i }
@@ -67,17 +70,7 @@ OptionParser.parse do |parser|
     puts parser
     exit
   end
-  parser.invalid_option do |flag|
-    STDERR.puts "ERROR: #{flag} is not a valid option."
-    STDERR.puts parser
-    exit(1)
-  end
-  parser.missing_option do |flag|
-    STDERR.puts "ERROR: #{flag} is missing an argument."
-    STDERR.puts parser
-    exit(1)
-  end
-end
+end.parse!
 
 if ARGV.size > 0
   puts "Ignoring superfluous args #{ARGV.join(' ')}"
