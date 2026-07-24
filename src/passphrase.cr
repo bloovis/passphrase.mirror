@@ -59,7 +59,7 @@ OptionParser.parse do |parser|
   parser.on("-d", "--diceware", "Use the Diceware word list") { wordlist = "diceware.wordlist" }
   parser.on("-s", "--short", "Use the EFF short word list") { wordlist = "eff_short.wordlist" }
   parser.on("-a", "--alternate", "Use the alternate EFF short word list") { wordlist = "eff_short2.wordlist" }
-  parser.on("-x", "--spaces", "Separate words with spaces") { separator = " " }
+  parser.on("-x STRING", "--separator=STRING", "Specifies the word separator") { |str| separator = str }
   parser.on("-v", "--verbose", "Print extra information") { verbose = true }
   parser.on("-h", "--help", "Show this help") do
     puts parser

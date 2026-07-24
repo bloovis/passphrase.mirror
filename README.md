@@ -50,7 +50,7 @@ Generates a passphrase using diceware
     -d, --diceware                   Use the Diceware word list
     -s, --short                      Use the EFF short word list
     -a, --alternate                  Use the alternate EFF short word list
-    -x, --spaces                     Separate words with spaces
+    -x STRING, --separator=STRING    Specifies the word separator
     -v, --verbose                    Print extra information
     -h, --help                       Show this help
 ```
